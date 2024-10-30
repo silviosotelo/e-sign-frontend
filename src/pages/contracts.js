@@ -1,17 +1,18 @@
-// src/pages/dashboard.js
+// src/pages/contracts.js
 import React, { useEffect, useState } from 'react';
-import { getContracts, getUserIdContracts } from '../services/contractService';
+import { useRouter } from 'next/router';
+import { getContracts } from '../services/contractService';
 import ContractList from '../components/ContractList';
 import Layout from '../components/Layout';
 
-const DashboardPage = () => {
+const ContractsPage = () => {
   const [contracts, setContracts] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchContracts = async () => {
       try {
-        //const contractsData = await getContracts();
-        const contractsData = await getUserIdContracts();
+        const contractsData = await getContracts();
         setContracts(contractsData);
       } catch (error) {
         console.error('Error fetching contracts:', error);
@@ -20,11 +21,15 @@ const DashboardPage = () => {
     fetchContracts();
   }, []);
 
+  const handleViewContract = (id) => {
+    router.push(`/contracts/${id}`);
+  };
+
   return (
-    <Layout pageTitle="Hola 👋, bienvenido!">
+    <Layout pageTitle="Sus contratos">
       <ContractList contracts={contracts} />
     </Layout>
   );
 };
 
-export default DashboardPage;
+export default ContractsPage;
