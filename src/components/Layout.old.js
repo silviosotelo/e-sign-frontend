@@ -1,45 +1,18 @@
 // src/components/Layout.js
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
 import useAuth from '../hooks/useAuth';
-import { getUserDataFromToken } from '../services/authService';
+import { UserContext } from '../contexts/UserContext';
 
 const Layout = ({ children, pageTitle }) => {
   const [isMounted, setIsMounted] = useState(false);
-  const [user, setUser] = useState(null);
-  const [userIp, setUserIp] = useState('127.0.0.1');
-
-  // Obtener los datos del usuario del token JWT
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const userData = await getUserDataFromToken(); // Esperar la resolución de la promesa
-      if (userData) {
-        setUser(userData);
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
-  // Obtener la IP del usuario
-  useEffect(() => {
-    const fetchUserIp = async () => {
-      try {
-        const response = await axios.get('https://api64.ipify.org?format=json');
-        setUserIp(response.data.ip);
-      } catch (error) {
-        console.error('Error fetching user IP:', error);
-      }
-    };
-    fetchUserIp();
-  }, []);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
   useAuth(); // Llama al hook para verificar la autenticación solo después del montaje
-
 
   if (!isMounted) {
     // No mostrar nada hasta que el componente esté montado

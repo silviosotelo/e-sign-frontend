@@ -35,11 +35,13 @@ const Layout = ({ children, pageTitle }) => {
               Contracts
             </Link>
           </li>
-          <li>
-            <Link href="/settings" className="text-gray-700 hover:text-blue-600 font-medium">
-              Settings
-            </Link>
-          </li>
+          {user && user.role === 'admin' && (
+            <li>
+              <Link href="/settings" className="text-gray-700 hover:text-blue-600 font-medium">
+                Settings
+              </Link>
+            </li>
+          )}
           <li>
             <Link href="/logout" className="text-gray-700 hover:text-blue-600 font-medium">
               Logout
