@@ -3,6 +3,19 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { login } from '../services/authService';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import Swal from 'sweetalert2';
+const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+  }
+});
+
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -14,13 +27,20 @@ const LoginPage = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await login(email, password);
+      const response = await login(email, password);
+      Toast.fire({
+        icon: "warning",
+        title: response
+      });
       setTimeout(() => {
         router.push('/dashboard');
       }, 1000); // Esperar 3 segundos antes de redirigir al dashboard
     } catch (error) {
       setIsLoading(false);
-      alert(error.message);
+      Toast.fire({
+        icon: "error",
+        title: error.message
+      });
     }
   };
 
